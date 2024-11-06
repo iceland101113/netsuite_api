@@ -16,25 +16,32 @@ module NetsuiteApi
       @consumer_secret = consumer_secret || ENV['NETSUITE_CONSUMER_SECRET']
     end
 
-    def connection
-      conn = Faraday.new(url: netsuite_host) do |faraday|
-        faraday.adapter Faraday.default_adapter
-        faraday.ssl.verify = true # You can set this to false if you have SSL verification issues
-      end
-    end
-
-    def request(url, query_params: nil, body: nil, method: :get, headers: {})
-      connection.send(method) do |req|
+    def request(url, query_params: nil, host_type: :netsuite_host, body: nil, method: :get, headers: {})
+      host = host_options[host_type]
+      connection(host).send(method) do |req|
         req.url full_url(url, query_params)
-        req.headers["Authorization"] = authorization_header(url, method, query_params)
+        req.headers["Authorization"] = authorization_header(url, method, query_params, host: host)
         req.headers["Content-Type"] = "application/json"
         req.headers.merge!(headers)
         req.body = JSON.dump(body) if body
       end
     end
 
-    def authorization_header(url, method, query_params)
-      "OAuth realm=\"#{account_id}\",oauth_consumer_key=\"#{consumer_key}\",oauth_token=\"#{token}\",oauth_signature_method=\"HMAC-SHA256\",oauth_timestamp=\"#{oauth_timestamp}\",oauth_nonce=\"#{oauth_nonce}\",oauth_version=\"1.0\",oauth_signature=\"#{generate_oauth_signature(url, method, query_params)}\""
+    private
+
+    def connection(host)
+      conn = Faraday.new(url: host) do |faraday|
+        faraday.adapter Faraday.default_adapter
+        faraday.ssl.verify = true # You can set this to false if you have SSL verification issues
+      end
+    end
+
+    def host_options
+      { netsuite_host: @netsuite_host, netsuite_pdf_host: @netsuite_pdf_host }
+    end
+
+    def authorization_header(url, method, query_params, host:)
+      "OAuth realm=\"#{account_id}\",oauth_consumer_key=\"#{consumer_key}\",oauth_token=\"#{token}\",oauth_signature_method=\"HMAC-SHA256\",oauth_timestamp=\"#{oauth_timestamp}\",oauth_nonce=\"#{oauth_nonce}\",oauth_version=\"1.0\",oauth_signature=\"#{generate_oauth_signature(url, method, query_params, host: host)}\""
     end
 
     def oauth_nonce
@@ -57,7 +64,7 @@ module NetsuiteApi
       CGI.escape(url)
     end
   
-    def generate_oauth_signature(url, http_method, query_params)
+    def generate_oauth_signature(url, http_method, query_params, host:)
       # Step 1: Combine parameters
       all_params = {
         'oauth_consumer_key' => consumer_key,
@@ -73,7 +80,7 @@ module NetsuiteApi
       normalized_params = all_params.sort.map { |k, v| url_encode("#{k}=#{URI.encode_www_form_component(v).gsub('+', '%20')}") }.join('%26') 
   
       # Step 3: Generate Signature Base String (SBS)
-      sbs = "#{http_method.to_s.upcase}&#{url_encode("#{netsuite_host}#{url}")}&#{normalized_params}"
+      sbs = "#{http_method.to_s.upcase}&#{url_encode("#{host}#{url}")}&#{normalized_params}"
     
       # Step 4: Generate Signing Key
       signing_key = "#{@consumer_secret}&#{@token_secret}"

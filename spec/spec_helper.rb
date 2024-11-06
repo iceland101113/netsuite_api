@@ -1,5 +1,7 @@
 require "bundler/setup"
 require "netsuite_api"
+require "webmock/rspec"
+require 'active_support'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
