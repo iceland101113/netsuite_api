@@ -1,6 +1,7 @@
 # NetsuiteApi
 
 This library is designed to help ruby/rails based applications communicate with the publicly available REST API for NetSuite.
+If you are unfamiliar with the NetSuite REST API, you should first read the documentation located at [SuiteTalk REST Web Services API Guide](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/book_1559132836.html).
 
 ## Installation
 
