@@ -1,6 +1,7 @@
 # NetsuiteApi
 
 This library is designed to help ruby/rails based applications communicate with the publicly available REST API for NetSuite.
+
 If you are unfamiliar with the NetSuite REST API, you should first read the documentation located at [SuiteTalk REST Web Services API Guide](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/book_1559132836.html).
 
 ## Installation
@@ -21,7 +22,70 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Setup Credential Information
+
+Set All the credential information in your project .env file
+```
+NETSUITE_HOST = ""
+NETSUITE_ACCOUNT_ID = ""
+NETSUITE_CONSUMER_KEY = ""
+NETSUITE_CONSUMER_SECRET = ""
+NETSUITE_TOKEN = ""
+NETSUITE_TOKEN_SECRET = ""
+NETSUITE_PDF_HOST =
+```
+
+or pass those information when initialize NetsuiteApi instance, for example, initializing NetsuiteApi::Invoice
+```
+NetsuiteApi::Invoice.new(netsuite_host: "", netsuite_pdf_host: "", account_id: "", consumer_key: "", token: "", token_secret: "", consumer_secret: "")
+```
+
+### Get data
+
+Get a specific Invoice data.
+```
+service = NetsuiteApi::Invoice.new
+service.get(netsuite_invoice_id)
+```
+
+Query some Invoice data.
+```
+# query invoices which entity is 12
+
+service = NetsuiteApi::Invoice.new
+query_params = { "q" => "entity EQUAL 12" }
+service.query(query_params)
+```
+
+### Create data
+
+Create an invoice
+```
+service = NetsuiteApi::Invoice.new
+params = {
+    "entity" => {
+        "id" => "12"
+    },
+    "postingperiod" => "121",
+    "item" => {
+        "items" => [
+            {
+                "amount" => 100.0,
+                "item" => {
+                    "id" => "26"
+                }
+            }
+        ]
+    },
+    "subsidiary" => {
+        "id" => "8"
+    },
+    "currency" => {
+        "id": "2"
+    }
+}
+service.create(invoice_params)
+```
 
 ## Development
 
