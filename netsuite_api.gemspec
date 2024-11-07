@@ -6,22 +6,20 @@ require "netsuite_api/version"
 Gem::Specification.new do |spec|
   spec.name          = "netsuite_api"
   spec.version       = NetsuiteApi::VERSION
-  spec.authors       = ["HueiYi Cheng"]
+  spec.authors       = ["HueiYi Lucy Cheng"]
   spec.email         = ["iceland101113@gmail.com"]
 
-  spec.summary       = %q{Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{Write a longer description or delete this line.}
-  spec.homepage      = "https://www.google.co.uk/"
+  spec.summary       = %q{Ruby Library for NetSuite REST API.}
+  spec.description   = %q{Ruby Library for NetSuite REST API. Originally developed by HueiYi Lucy Cheng.}
+  spec.homepage      = "https://github.com/iceland101113/netsuite_api"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "http://mygemserver.com"
-
     spec.metadata["homepage_uri"] = spec.homepage
-    spec.metadata["source_code_uri"] = "https://www.google.co.uk/"
-    spec.metadata["changelog_uri"] = "https://www.google.co.uk/"
+    spec.metadata["source_code_uri"] = "https://github.com/iceland101113/netsuite_api"
+    spec.metadata["changelog_uri"] = "https://github.com/iceland101113/netsuite_api"
   else
     raise "RubyGems 2.0 or newer is required to protect against " \
       "public gem pushes."
@@ -40,8 +38,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry"
-  spec.add_development_dependency "webmock"
-  spec.add_dependency "faraday"
-  spec.add_dependency "activesupport"
-  spec.add_dependency "securerandom"
+  spec.add_development_dependency "webmock", "~> 3.0"
+  spec.add_dependency "faraday", "~> 2.0"
+  spec.add_dependency "activesupport", "~> 6.0"
+  spec.add_dependency "securerandom", "~> 0.3"
 end
