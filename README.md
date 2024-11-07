@@ -1,8 +1,6 @@
 # NetsuiteApi
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/netsuite_api`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This library is designed to help ruby/rails based applications communicate with the publicly available REST API for NetSuite.
 
 ## Installation
 
