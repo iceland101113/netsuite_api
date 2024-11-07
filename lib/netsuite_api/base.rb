@@ -11,8 +11,8 @@ module NetsuiteApi
       @netsuite_pdf_host = netsuite_pdf_host || ENV['NETSUITE_PDF_HOST']
       @account_id = account_id || ENV['NETSUITE_ACCOUNT_ID']
       @consumer_key = consumer_key || ENV['NETSUITE_CONSUMER_KEY']
-      @token = token || ENV['NETSUITE_TOKEN_ID']
-      @token_secret = token_secret || ENV['NETSUITE_TOKEN']
+      @token = token || ENV['NETSUITE_TOKEN']
+      @token_secret = token_secret || ENV['NETSUITE_TOKEN_SECRET']
       @consumer_secret = consumer_secret || ENV['NETSUITE_CONSUMER_SECRET']
     end
 
