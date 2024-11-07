@@ -42,13 +42,13 @@ NetsuiteApi::Invoice.new(netsuite_host: "", netsuite_pdf_host: "", account_id: "
 
 ### Get data
 
-Get a specific Invoice data.
+Get a specific invoice data.
 ```
 service = NetsuiteApi::Invoice.new
 service.get(netsuite_invoice_id)
 ```
 
-Query some Invoice data.
+Query some invoice data.
 ```
 # query invoices which entity is 12
 
@@ -86,6 +86,26 @@ params = {
 }
 service.create(invoice_params)
 ```
+
+### Update data
+
+Update an invoice
+```
+service = NetsuiteApi::Invoice.new
+update_params = { "otherRefNum": "1234" }
+invoice_id = 1
+service.update(invoice_id, update_params)
+```
+
+### Delete data
+
+Delete an invoice
+```
+service = NetsuiteApi::Invoice.new
+invoice_id = 1
+service.delete(invoice_id)
+```
+
 
 ## Development
 
