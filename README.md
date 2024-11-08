@@ -50,7 +50,7 @@ More information about the objects could be found in `lib/netsuite_api`.
 
 All the objects have method to get record, create data, update data, delete data in NetSuite through Netsuite REST API. 
 
-Following section shows an example of using NetsuiteApi::Invoice. The way to use other objects is similar.
+Following section shows an example of using `NetsuiteApi::Invoice`. The way to use other objects is similar.
 
 ### Get data
 
