@@ -42,13 +42,13 @@ NetsuiteApi::Invoice.new(netsuite_host: "", netsuite_pdf_host: "", account_id: "
 
 ### Get data
 
-Get a specific invoice data.
+* Get a specific invoice data.
 ```
 service = NetsuiteApi::Invoice.new
 service.get(netsuite_invoice_id)
 ```
 
-Query some invoice data.
+* Query some invoice data.
 ```
 # query invoices which entity is 12
 
