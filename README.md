@@ -44,7 +44,7 @@ NetsuiteApi::Invoice.new(netsuite_host: "", netsuite_pdf_host: "", account_id: "
 
 ## NetsuiteApi Object Usage
 
-There are 7 objects could be use: `NetsuiteApi::Invoice`, `NetsuiteApi::CreditMemo`, `NetsuiteApi::Payment`, `NetsuiteApi::Customer`, `NetsuiteApi::Contact`, `NetsuiteApi::Vendor`, `NetsuiteApi::VendorBill`. 
+There are 7 objects could be used: `NetsuiteApi::Invoice`, `NetsuiteApi::CreditMemo`, `NetsuiteApi::Payment`, `NetsuiteApi::Customer`, `NetsuiteApi::Contact`, `NetsuiteApi::Vendor`, `NetsuiteApi::VendorBill`. 
 
 More information about the objects could be found in `lib/netsuite_api`.
 
@@ -101,6 +101,7 @@ params = {
 service.create(invoice_params)
 ```
 
+
 ### Update data
 
 * Update an invoice
@@ -110,6 +111,7 @@ update_params = { "otherRefNum": "1234" }
 invoice_id = 1
 service.update(invoice_id, update_params)
 ```
+
 
 ### Delete data
 
