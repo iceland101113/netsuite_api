@@ -11,7 +11,7 @@ The NetSuite REST API document could be found at [NetSuite REST API Browser: Rec
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'netsuite_api'
+gem 'netsuite_api', '0.1.4'
 ```
 
 And then execute:
