@@ -6,8 +6,13 @@ require "netsuite_api/contact"
 require "netsuite_api/payment"
 require "netsuite_api/vendor"
 require "netsuite_api/vendor_bill"
+require "logger"
 
 module NetsuiteApi
-  class Error < StandardError; end
-  # Your code goes here...
+  class << self
+    attr_accessor :logger
+  end
+
+  # 預設 Logger 為 STDOUT
+  self.logger = Logger.new(STDOUT)
 end

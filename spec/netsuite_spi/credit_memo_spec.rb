@@ -38,4 +38,27 @@ RSpec.describe NetsuiteApi::CreditMemo do
     result = NetsuiteApi::CreditMemo.new(netsuite_host: 'https://netsuite-test.domain/').query({ "q" => "entity EQUAL 12" })
     expect(result.dig("count")).to eq(1)
   end
+
+  it 'response error' do
+    stub_request(:get, 'https://netsuite-test.domain/creditMemo/1')
+      .to_return(status: 401, body: { "title": "Unauthorized", "o:errorDetails": "Invalid login attempt" }.to_json, headers: {})
+    expect { NetsuiteApi::CreditMemo.new(netsuite_host: 'https://netsuite-test.domain/').get(1) }.to raise_error(NetsuiteApi::Concerns::ResponseHandler::NetSuiteApiError)
+  end
+
+  it 'response empty body' do
+    stub_request(:get, 'https://netsuite-test.domain/creditMemo/1')
+      .to_return(status: 400, body: {}.to_json, headers: {})
+    expect { NetsuiteApi::CreditMemo.new(netsuite_host: 'https://netsuite-test.domain/').get(1) }.to raise_error(NetsuiteApi::Concerns::ResponseHandler::NetSuiteApiError)
+  end
+
+  it '#create no location in response header' do
+    stub_request(:post, 'https://netsuite-test.domain/invoice/123/!transform/creditMemo')
+      .to_return(status: 200, body: "", headers: {})
+    
+    expect(NetsuiteApi.logger).to receive(:error).with("NetSuite API Error: No location header in response")
+    invoice_id = 123
+    params = { "apply": { "items": [{ "doc": { "apply": true, "id": invoice_id }, "amount": 100 }]}}
+    credit_memo_id = NetsuiteApi::CreditMemo.new(netsuite_host: 'https://netsuite-test.domain/').create(invoice_id, params)
+    expect(credit_memo_id).to eq(nil)
+  end
 end

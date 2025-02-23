@@ -118,6 +118,58 @@ RSpec.describe NetsuiteApi::Payment do
     pdf = NetsuiteApi::Payment.new(netsuite_pdf_host: 'https://netsuite-test-pdf.domain/').get_pdf(query)
     expect(pdf).to eq("pdf")
   end
+
+  it 'response error' do
+    stub_request(:get, 'https://netsuite-test.domain/customerpayment/1')
+      .to_return(status: 401, body: { "title": "Unauthorized", "o:errorDetails": "Invalid login attempt" }.to_json, headers: {})
+    expect { NetsuiteApi::Payment.new(netsuite_host: 'https://netsuite-test.domain/').get(1) }.to raise_error(NetsuiteApi::Concerns::ResponseHandler::NetSuiteApiError)
+  end
+
+  it 'response empty body' do
+    stub_request(:get, 'https://netsuite-test.domain/customerpayment/1')
+      .to_return(status: 400, body: {}.to_json, headers: {})
+    expect { NetsuiteApi::Payment.new(netsuite_host: 'https://netsuite-test.domain/').get(1) }.to raise_error(NetsuiteApi::Concerns::ResponseHandler::NetSuiteApiError)
+  end
+
+  it '#create no location in response header' do
+    stub_request(:post, 'https://netsuite-test.domain/customerpayment')
+      .to_return(status: 200, body: "", headers: {})
+    
+    expect(NetsuiteApi.logger).to receive(:error).with("NetSuite API Error: No location header in response")
+    params = {
+      "applied": 10,
+      "apply": {
+          "items": [
+              {
+                  "amount": 10,
+                  "applyDate": "2024-11-04",
+                  "currency": "USD",
+                  "doc": {
+                      "id": "103912",
+                      "refName": "103912"
+                  },
+                  "due": 10,
+                  "total": 10,
+                  "type": "Invoice"
+              }
+          ]
+      },
+      "currency": {
+          "id": "2"
+      },
+      "customer": {
+          "id": "27480"
+      },
+      "subsidiary": {
+          "id": "9"
+      },
+      "total": 10,
+      "tranDate": "2024-11-04"
+    }
+
+    payment_id = NetsuiteApi::Payment.new(netsuite_host: "https://netsuite-test.domain/").create(params)
+    expect(payment_id).to eq(nil)
+  end
 end
 
 

@@ -1,6 +1,7 @@
 require 'faraday'
 require 'securerandom'
 require 'active_support/core_ext/object'
+require 'base64'
 
 module NetsuiteApi
   class Base
@@ -89,7 +90,7 @@ module NetsuiteApi
       digest = OpenSSL::Digest.new('sha256')
       hmac = OpenSSL::HMAC.digest(digest, signing_key, sbs)
       
-      oauth_signature = CGI.escape(Base64.encode64(hmac).chomp.gsub('\n', ''))
+      oauth_signature = CGI.escape(::Base64.encode64(hmac).chomp.gsub('\n', ''))
     
       oauth_signature
     end

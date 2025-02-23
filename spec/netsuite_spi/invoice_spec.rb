@@ -51,4 +51,26 @@ RSpec.describe NetsuiteApi::Invoice do
     pdf = NetsuiteApi::Invoice.new(netsuite_pdf_host: 'https://netsuite-test-pdf.domain/').get_pdf(query)
     expect(pdf).to eq("pdf")
   end
+
+  it 'response error' do
+    stub_request(:get, 'https://netsuite-test.domain/invoice/1')
+      .to_return(status: 401, body: { "title": "Unauthorized", "o:errorDetails": "Invalid login attempt" }.to_json, headers: {})
+    expect { NetsuiteApi::Invoice.new(netsuite_host: 'https://netsuite-test.domain/').get(1) }.to raise_error(NetsuiteApi::Concerns::ResponseHandler::NetSuiteApiError)
+  end
+
+  it 'response empty body' do
+    stub_request(:get, 'https://netsuite-test.domain/invoice/1')
+      .to_return(status: 400, body: {}.to_json, headers: {})
+    expect { NetsuiteApi::Invoice.new(netsuite_host: 'https://netsuite-test.domain/').get(1) }.to raise_error(NetsuiteApi::Concerns::ResponseHandler::NetSuiteApiError)
+  end
+
+  it '#create no location in response header' do
+    stub_request(:post, 'https://netsuite-test.domain/invoice')
+      .to_return(status: 200, body: "", headers: {})
+    
+    expect(NetsuiteApi.logger).to receive(:error).with("NetSuite API Error: No location header in response")
+    params = { "entity" => { "id" => "12" }, "postingperiod" => "121", "item" => { "items" => [{ "amount" => 100.0, "item" => { "id" => "26" }}]}, "subsidiary" => { "id" => "8" }, "currency" => { "id": "2"}}
+    invoice_id = NetsuiteApi::Invoice.new(netsuite_host: 'https://netsuite-test.domain/').create(params)
+    expect(invoice_id).to eq(nil)
+  end
 end

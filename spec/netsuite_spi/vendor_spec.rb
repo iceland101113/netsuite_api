@@ -36,5 +36,27 @@ RSpec.describe NetsuiteApi::Vendor do
   it "#query" do
     result = NetsuiteApi::Vendor.new(netsuite_host: "https://netsuite-test.domain/").query({ "q" => "companyName CONTAIN Example" })
     expect(result.dig("count")).to eq(1)
-  end    
+  end
+
+  it 'response error' do
+    stub_request(:get, 'https://netsuite-test.domain/vendor/1')
+      .to_return(status: 401, body: { "title": "Unauthorized", "o:errorDetails": "Invalid login attempt" }.to_json, headers: {})
+    expect { NetsuiteApi::Vendor.new(netsuite_host: 'https://netsuite-test.domain/').get(1) }.to raise_error(NetsuiteApi::Concerns::ResponseHandler::NetSuiteApiError)
+  end
+
+  it 'response empty body' do
+    stub_request(:get, 'https://netsuite-test.domain/vendor/1')
+      .to_return(status: 400, body: {}.to_json, headers: {})
+    expect { NetsuiteApi::Vendor.new(netsuite_host: 'https://netsuite-test.domain/').get(1) }.to raise_error(NetsuiteApi::Concerns::ResponseHandler::NetSuiteApiError)
+  end
+
+  it '#create no location in response header' do
+    stub_request(:post, 'https://netsuite-test.domain/vendor')
+      .to_return(status: 200, body: "", headers: {})
+    
+    expect(NetsuiteApi.logger).to receive(:error).with("NetSuite API Error: No location header in response")
+    params = { "companyName" => "Test2 Example", "subsidiary" => { "id" => "8" }, "addressBook" => { "items" => [{ "addressBookAddress" => { "addr1" => "test street", "city" => "test city" }}]}, "currency": { "id": "2" }}
+    vendor_id = NetsuiteApi::Vendor.new(netsuite_host: "https://netsuite-test.domain/").create(params)
+    expect(vendor_id).to eq(nil)
+  end
 end
