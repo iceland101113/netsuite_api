@@ -50,7 +50,7 @@ module NetsuiteApi
           title = "Invalid API Response"
           details = response.body.to_s.strip.empty? ? "Empty response body" : response.body
         end
-      binding.pry
+
         NetsuiteApi.logger.error("NetSuite API Error: #{title} - #{details}")
         raise NetSuiteApiError.new(title, details)
       end
