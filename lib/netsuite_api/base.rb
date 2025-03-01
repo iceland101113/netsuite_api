@@ -78,7 +78,6 @@ module NetsuiteApi
   
       # Step 2: Normalize parameters
       normalized_params = all_params.sort.map { |k, v| url_encode("#{k}=#{URI.encode_www_form_component(v).gsub('+', '%20')}") }.join('%26') 
-      # normalized_params = URI.encode_www_form(all_params.sort)
   
       # Step 3: Generate Signature Base String (SBS)
       sbs = "#{http_method.to_s.upcase}&#{url_encode("#{host}#{url}")}&#{normalized_params}"
